@@ -1,0 +1,81 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Prevent device sleep test</title>
+<link rel="manifest" href="manifest.json">
+<script>
+function PreventSleep() {
+	if (typeof navigator.wakeLock !== "undefined") {
+		navigator.wakeLock.request("display").then(
+		function successFunction() {
+			alert("Successful.");
+			navigator.wakeLock.release("display");
+		},
+		function errorFunction() {
+			// fallback
+		})
+	} else {
+		//fallback
+		alert("Your browser is not support Standby API, fallbacking...");
+		
+		// Set the name of the hidden property and the change event for visibility
+		var hidden, visibilityChange; 
+		if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+		  hidden = "hidden";
+		  visibilityChange = "visibilitychange";
+		} else if (typeof document.msHidden !== "undefined") {
+		  hidden = "msHidden";
+		  visibilityChange = "msvisibilitychange";
+		} else if (typeof document.webkitHidden !== "undefined") {
+		  hidden = "webkitHidden";
+		  visibilityChange = "webkitvisibilitychange";
+		}
+		 
+		// If the page is hidden, pause the live;
+		// if the page is shown, contiume the live
+		function handleVisibilityChange() {
+		  if (document[hidden]) {
+			alert("hidden!");
+		  } else {
+			alert("contiume!");
+		  }
+		}
+
+		// Warn if the browser doesn't support addEventListener or the Page Visibility API
+		if (typeof document.addEventListener === "undefined" || typeof document[hidden] === "undefined") {
+		  console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+		} else {
+		  // Handle page visibility change   
+		  document.addEventListener(visibilityChange, handleVisibilityChange, false);
+		}
+		
+	(function() {
+    var timestamp = new Date().getTime();
+
+		function checkResume() {
+			var current = new Date().getTime();
+			if (current - timestamp > 4000) {
+				var event = document.createEvent("Events");
+				event.initEvent("resume", true, true);
+				document.dispatchEvent(event);
+			}
+			timestamp = current;
+		}
+
+		window.requestAnimationFrame(checkResume);
+		})();
+	}
+	
+	document.addEventListener("resume", function() {
+		alert('Resuming this webapp');
+	});
+}; 
+</script>
+</head>
+
+<body>
+<script>screen.orientation.lock('landscape');</script>
+<input type="button" onclick="javascript:PreventSleep();" value="start" />
+<canvas width="1024" height="768" style="background:url(img.jpg)"></canvas>
+</body> 
+</html>

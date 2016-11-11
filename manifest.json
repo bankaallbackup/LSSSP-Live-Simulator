@@ -1,0 +1,12 @@
+{
+	"manifest_version": 2,
+	"name":				"LoveLive! SIF WebApp",
+	"version":			"1.0.0",
+	
+	"default_locale": 	"en",
+	"description": 		"LoveLive! SIF WebApp based on HTML5 & Playground.js",
+	"icons": 			{},
+	
+    "display":      	"fullscreen",
+    "orientation":  	"landscape",
+}
